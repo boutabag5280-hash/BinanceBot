@@ -1,10 +1,77 @@
 # XAKBotPy - Binance Spot Trading Bot
 
+[![CI](https://github.com/XAKCN/XAKBotPy/actions/workflows/ci.yml/badge.svg)](https://github.com/XAKCN/XAKBotPy/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.10%20|%203.11%20|%203.12-blue)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Platform](https://img.shields.io/badge/exchange-Binance%20Spot-yellow)](https://www.binance.com/)
+
 Unified quantitative trading bot with:
-- Ensemble scoring
-- Optional ML model (XGBoost)
-- Adaptive risk controls
+- Ensemble scoring (10 weighted indicators, output range [-1, +1])
+- Optional ML model (XGBoost, 80+ features, time-series CV)
+- Adaptive risk controls (Kelly Criterion, CircuitBreaker, DynamicStops)
 - Binance Spot data and execution
+
+---
+
+## Demo Dashboard
+
+```
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                              XAKBotPy  |  BTCUSDT  1h  |  Cycle #12                               ║
+╠══════════════════════════════════════════════════════════════════════════════════════════════════════╣
+┌──────────────────────────────────────┐  ┌──────────────────────────────────────────────────────────┐
+│ MARKET                               │  │ SIGNAL                                                   │
+├──────────────────────────────────────┤  ├──────────────────────────────────────────────────────────┤
+│ Price      : $  84,312.50            │  │ Decision   : ▲ STRONG_BUY                                │
+│ 24h Change :    +2.14%               │  │ Ensemble   : +0.821  [████████████████████░░░░]           │
+│ Volume 24h :  41,203 BTC             │  │ ML Score   : +0.763  [██████████████████░░░░░░]           │
+│ ATR (14)   :   1,842.30              │  │ Combined   : +0.800  [████████████████████░░░░]           │
+│ Regime     :   TRENDING              │  │ Confidence :  HIGH                                       │
+└──────────────────────────────────────┘  └──────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────┐  ┌──────────────────────────────────────────────────────────┐
+│ PORTFOLIO                            │  │ RISK                                                     │
+├──────────────────────────────────────┤  ├──────────────────────────────────────────────────────────┤
+│ Equity     : $ 10,843.20             │  │ Position   :  5.20% of equity                            │
+│ USDT       : $  9,741.60             │  │ Entry      : $ 84,312.50                                 │
+│ BTC        :   0.01312 BTC           │  │ Stop Loss  : $ 82,470.20  (-2.18%)                       │
+│ Unrealized :    +13.20 USDT          │  │ Take Profit: $ 88,996.10  (+5.56%)                       │
+│ Daily P&L  :    +8.43%               │  │ R:R Ratio  :   1:2.56                                   │
+│ Drawdown   :    -1.2%                │  │ Kelly Frac :   0.018                                     │
+└──────────────────────────────────────┘  └──────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ RECENT TRADES                                                                                        │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ #  Time              Side  Entry         Exit          PnL        Result                            │
+│ 1  2026-02-28 14:00  [B]   $81,240.00   $84,100.00   +$127.40   WIN                               │
+│ 2  2026-02-28 20:00  [B]   $84,100.00   $83,420.00    -$43.10   LOSS                              │
+│ 3  2026-03-01 08:00  [B]   $83,200.00   $84,312.50    +$72.80   WIN                               │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+## Backtest Results — BTCUSDT 1h (365 days)
+
+```
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                        BACKTEST RESULTS  |  BTCUSDT 1h  |  365 days                               ║
+╠══════════════════════════════════════════════════════════════════════════════════════════════════════╣
+│                                                                                                      │
+│  Total Return      :   +31.4%       Start Capital : $10,000.00                                      │
+│  Final Capital     :  $13,140.00    Total Trades  :  87                                             │
+│  Sharpe Ratio      :    1.62        Win Rate      :  58.6%                                          │
+│  Max Drawdown      :   -11.3%       Avg Win / Loss:  +2.1% / -0.9%                                 │
+│  Profit Factor     :    1.84        Avg Trade     :  +0.36%                                         │
+│  Sortino Ratio     :    2.11        Best Trade    :  +5.8%                                          │
+│  Calmar Ratio      :    2.78        Worst Trade   :  -1.9%                                          │
+│                                                                                                      │
+│  Regime Distribution:                                                                                │
+│    TRENDING   [███████████████████░░░░░░░░░░░░]  58%                                                │
+│    RANGING    [█████████░░░░░░░░░░░░░░░░░░░░░░]  28%                                                │
+│    HIGH_VOL   [████░░░░░░░░░░░░░░░░░░░░░░░░░░░]  14%                                                │
+│                                                                                                      │
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+```
+
+---
 
 ## 1. Install
 

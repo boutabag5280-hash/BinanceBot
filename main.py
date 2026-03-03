@@ -24,18 +24,6 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-# Suppress warnings
-import warnings
-warnings.filterwarnings('ignore')
-
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s | %(levelname)-8s | %(message)s',
-    datefmt='%H:%M:%S'
-)
-logger = logging.getLogger(__name__)
-
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -49,6 +37,8 @@ from ml.feature_engineering import FeatureEngineer
 from ml.model_training import XGBoostTrainer, ModelInference
 from filters.regime_detection import SimpleRegimeDetector, VolatilityRegime
 from filters.position_sizing import PositionSizer, DynamicStops, CircuitBreaker
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -308,7 +298,7 @@ class UnifiedTradingBot:
         if model_path.exists():
             try:
                 self.ml_model = ModelInference(str(model_path))
-                logger.info(f"[OK] ML model loaded")
+                logger.info("[OK] ML model loaded")
             except Exception as e:
                 logger.warning(f"Failed to load ML model: {e}")
                 self.cfg.use_ml = False
@@ -1068,7 +1058,7 @@ def run_optimize_mode(cfg: TradingConfig):
     
     best_params = optimizer.optimize(param_space, objective='sharpe')
     
-    logger.info(f"\nOptimization complete!")
+    logger.info("\nOptimization complete!")
     logger.info(f"Best parameters: {best_params}")
     
 
